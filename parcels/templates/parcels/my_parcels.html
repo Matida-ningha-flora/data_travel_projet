@@ -1,0 +1,17 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="card p-4">
+    <h3>📋 Mes colis</h3>
+    {% for parcel in parcels %}
+    <div class="trip-card">
+        <div><strong>#{{ parcel.tracking_number }}</strong> - {{ parcel.departure_city }} → {{ parcel.arrival_city }}</div>
+        <div class="small text-muted">Poids: {{ parcel.weight }} kg | Prix: {{ parcel.price }} FCFA</div>
+        <div>Statut: {{ parcel.get_status_display }}</div>
+        <a href="{% url 'track_parcel' parcel.tracking_number %}" class="btn btn-sm btn-primary mt-2">Suivre</a>
+    </div>
+    {% empty %}
+    <div class="alert alert-info">Aucun colis</div>
+    {% endfor %}
+</div>
+{% endblock %}

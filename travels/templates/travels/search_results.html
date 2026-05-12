@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="card p-4">
+    <h3>Résultats de recherche</h3>
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-4"><input type="text" name="departure" class="form-control" placeholder="Départ" value="{{ request.GET.departure }}"></div>
+        <div class="col-md-4"><input type="text" name="arrival" class="form-control" placeholder="Arrivée" value="{{ request.GET.arrival }}"></div>
+        <div class="col-md-3"><input type="date" name="date" class="form-control"></div>
+        <div class="col-md-1"><button type="submit" class="btn btn-primary w-100">OK</button></div>
+    </form>
+    
+    {% for trip in trips %}
+    <div class="trip-card">
+        <div class="d-flex justify-content-between">
+            <div><strong>{{ trip.departure_city }}</strong> → <strong>{{ trip.arrival_city }}</strong></div>
+            <div>{{ trip.price }} FCFA</div>
+        </div>
+        <div class="text-muted small">{{ trip.departure_date|date:"d/m/Y" }} à {{ trip.departure_time|time:"H:i" }} | {{ trip.available_seats }} places</div>
+        <a href="/travels/book/{{ trip.id }}/" class="btn btn-primary btn-sm mt-2">Réserver</a>
+    </div>
+    {% empty %}
+    <div class="alert alert-info">Aucun trajet trouvé</div>
+    {% endfor %}
+</div>
+{% endblock %}

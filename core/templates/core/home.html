@@ -1,0 +1,110 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<!-- Bienvenue -->
+<div class="text-center mb-5">
+    <h1 class="display-5 fw-bold" style="color: #FF6B35;">
+        Bonjour, {{ user.username }}! 👋
+    </h1>
+    <p class="lead opacity-75">
+        {% if user.user_type == 'agency' %}
+            Gérez vos trajets et réservations
+        {% else %}
+            Prêt pour votre prochaine aventure ?
+        {% endif %}
+    </p>
+</div>
+
+<!-- Formulaire de recherche -->
+<div class="card p-4 mb-4">
+    <h5 class="mb-3"><i class="bi bi-search"></i> 🔍 Trouver un voyage</h5>
+    <form method="get" action="{% url 'search_trips' %}" class="row g-3">
+        <div class="col-md-4">
+            <input type="text" name="departure" class="form-control" placeholder="🏙️ Ville de départ" list="cities">
+        </div>
+        <div class="col-md-4">
+            <input type="text" name="arrival" class="form-control" placeholder="🎯 Ville d'arrivée" list="cities">
+        </div>
+        <div class="col-md-3">
+            <input type="date" name="date" class="form-control">
+        </div>
+        <div class="col-md-1">
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-arrow-right"></i>
+            </button>
+        </div>
+    </form>
+    <datalist id="cities">
+        <option>Douala</option><option>Yaoundé</option><option>Bafoussam</option>
+        <option>Garoua</option><option>Maroua</option><option>Kribi</option>
+        <option>Limbe</option><option>Bamenda</option><option>Ngaoundéré</option>
+        <option>Bertoua</option><option>Ebolowa</option>
+    </datalist>
+</div>
+
+<!-- Actions rapides -->
+<div class="row g-4 mb-5">
+    <div class="col-md-6">
+        <div class="card p-4 text-center h-100">
+            <i class="bi bi-box-seam fs-1" style="color: #FF6B35;"></i>
+            <h5 class="mt-3 fw-bold">📦 Envoyer un colis</h5>
+            <p class="small opacity-75">Expédition rapide et sécurisée</p>
+            <a href="/parcels/send/" class="btn btn-outline-primary mt-2">Nouvel envoi →</a>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card p-4 text-center h-100">
+            <i class="bi bi-geo-alt fs-1" style="color: #28a745;"></i>
+            <h5 class="mt-3 fw-bold">📍 Suivre un colis</h5>
+            <p class="small opacity-75">Suivez vos envois en temps réel</p>
+            <a href="/parcels/my-parcels/" class="btn btn-outline-primary mt-2">Mes suivis →</a>
+        </div>
+    </div>
+</div>
+
+<!-- Trajets disponibles -->
+<h3 class="mb-4 fw-bold"><i class="bi bi-bus-front"></i> Prochains départs</h3>
+<div class="row">
+    {% for trip in trips %}
+    <div class="col-md-4 mb-4">
+        <div class="trip-card">
+            <div class="d-flex justify-content-between mb-2">
+                <span class="badge bg-secondary">{{ trip.bus.bus_number }}</span>
+                <span class="opacity-75"><i class="bi bi-chair"></i> {{ trip.available_seats }}/{{ trip.bus.capacity }}</span>
+            </div>
+            <div class="text-center my-3">
+                <span class="fs-3 fw-bold">{{ trip.departure_city }}</span>
+                <i class="bi bi-arrow-right fs-4 mx-2" style="color: #FF6B35;"></i>
+                <span class="fs-3 fw-bold">{{ trip.arrival_city }}</span>
+            </div>
+            <div class="row text-center mb-3">
+                <div class="col-4">
+                    <small class="opacity-75">Date</small><br>
+                    <strong>{{ trip.departure_date|date:"d/m/Y" }}</strong>
+                </div>
+                <div class="col-4">
+                    <small class="opacity-75">Heure</small><br>
+                    <strong>{{ trip.departure_time|time:"H:i" }}</strong>
+                </div>
+                <div class="col-4">
+                    <small class="opacity-75">Prix</small><br>
+                    <strong class="text-primary">{{ trip.price }} FCFA</strong>
+                </div>
+            </div>
+            {% if user.user_type == 'client' %}
+            <a href="/travels/book/{{ trip.id }}/" class="btn btn-primary w-100">
+                <i class="bi bi-ticket"></i> Réserver
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="card p-5 text-center">
+            <i class="bi bi-calendar-x fs-1 opacity-50"></i>
+            <p class="mt-3 mb-0">Aucun trajet disponible pour le moment</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

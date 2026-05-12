@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="card p-4">
+    <h3>📍 Suivi colis #{{ parcel.tracking_number }}</h3>
+    <p><strong>De:</strong> {{ parcel.departure_city }} → <strong>À:</strong> {{ parcel.arrival_city }}</p>
+    <p><strong>Destinataire:</strong> {{ parcel.receiver_name }} ({{ parcel.receiver_phone }})</p>
+    <p><strong>Statut actuel:</strong> <span class="badge-success">{{ parcel.get_status_display }}</span></p>
+    
+    <h5 class="mt-4">Historique</h5>
+    {% for tracking in parcel.trackings.all %}
+    <div class="border-start border-primary ps-3 mb-3">
+        <strong>{{ tracking.location }}</strong> - {{ tracking.status }}<br>
+        <small class="text-muted">{{ tracking.timestamp|date:"d/m/Y H:i" }}</small>
+        <p class="mb-0">{{ tracking.description }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

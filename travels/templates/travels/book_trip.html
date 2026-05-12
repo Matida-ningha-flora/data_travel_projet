@@ -1,0 +1,76 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-4">
+            <h3 class="text-center mb-4">🎫 Réservation</h3>
+            
+            <!-- Infos voyage -->
+            <div class="bg-light p-3 rounded-4 mb-4" style="background: var(--card-bg);">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="text-center flex-grow-1">
+                        <div class="fs-3 fw-bold">{{ trip.departure_city }}</div>
+                        <small class="opacity-75">Départ</small>
+                    </div>
+                    <i class="bi bi-arrow-right fs-2" style="color: #FF6B35;"></i>
+                    <div class="text-center flex-grow-1">
+                        <div class="fs-3 fw-bold">{{ trip.arrival_city }}</div>
+                        <small class="opacity-75">Arrivée</small>
+                    </div>
+                </div>
+                <hr>
+                <div class="row text-center">
+                    <div class="col-4">
+                        <i class="bi bi-calendar3"></i><br>
+                        {{ trip.departure_date|date:"d/m/Y" }}
+                    </div>
+                    <div class="col-4">
+                        <i class="bi bi-clock"></i><br>
+                        {{ trip.departure_time|time:"H:i" }}
+                    </div>
+                    <div class="col-4">
+                        <i class="bi bi-cash-stack"></i><br>
+                        {{ trip.price }} FCFA
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Formulaire -->
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Nombre de places</label>
+                    <input type="number" name="seats" class="form-control" min="1" max="{{ trip.available_seats }}" value="1" required>
+                    <small class="opacity-75 mt-1 d-block">
+                        <i class="bi bi-chair"></i> {{ trip.available_seats }} places disponibles
+                    </small>
+                </div>
+                
+                <div class="alert alert-primary rounded-4" id="totalBox">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>Total à payer :</span>
+                        <span class="fs-4 fw-bold" id="totalPrice">{{ trip.price }} FCFA</span>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-100 py-2">
+                    <i class="bi bi-check-circle"></i> Confirmer la réservation
+                </button>
+                <a href="/" class="btn btn-outline-secondary w-100 mt-2">Annuler</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const price = {{ trip.price }};
+    const seatsInput = document.querySelector('input[name="seats"]');
+    const totalSpan = document.getElementById('totalPrice');
+    
+    seatsInput.addEventListener('change', function() {
+        let total = this.value * price;
+        totalSpan.textContent = total + ' FCFA';
+    });
+</script>
+{% endblock %}

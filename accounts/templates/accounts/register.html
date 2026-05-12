@@ -1,0 +1,45 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-4">
+            <h3 class="text-center mb-4">Inscription</h3>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Nom d'utilisateur</label>
+                    <input type="text" name="username" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Téléphone</label>
+                    <input type="text" name="phone" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Type de compte</label>
+                    <select name="user_type" class="form-select">
+                        <option value="client">Client voyageur</option>
+                        <option value="agency">Agence de transport</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Mot de passe</label>
+                    <input type="password" name="password1" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Confirmer mot de passe</label>
+                    <input type="password" name="password2" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">S'inscrire</button>
+            </form>
+            <div class="text-center mt-3">
+                <a href="{% url 'login' %}">Déjà inscrit ? Connectez-vous</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
